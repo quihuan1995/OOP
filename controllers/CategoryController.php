@@ -66,5 +66,15 @@ class CategoryController{
             }
     }
   
+    public function get_product_by_cat($id){
+        $query = "select * from product where cat_id='$id'";
+        $data = $this->db->select($query);
+        return $data;
+    }
+    public function get_prdname_by_cat($id){
+        $query = "select product.*,category.cat_name,category.cat_id from product,category where product.cat_id=category.cat_id and product.cat_id='$id'";
+        $data = $this->db->select($query);
+        return $data;
+    }
 }
 ?>

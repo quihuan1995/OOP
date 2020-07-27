@@ -11,7 +11,7 @@ spl_autoload_register(function($controller){
 $db = new Database();
 $fm = new Format();
 $cart = new CartController();
-$cate = new CategoryController();
+$cat = new CategoryController();
 $prd = new ProductController();
 
 ?>
@@ -40,7 +40,7 @@ $prd = new ProductController();
         <div class="container">
             <div class="row">
                 <div id="logo" class="col-lg-3 col-md-3 col-sm-12">
-                    <h1><a href="#"><img class="img-fluid" src="../publics/images/logo.png"></a></h1>
+                    <h1><a href="index.php"><img class="img-fluid" src="../publics/images/logo.png"></a></h1>
                 </div>
                 <div id="search" class="col-lg-6 col-md-6 col-sm-12">
                     <form class="form-inline">
@@ -49,7 +49,17 @@ $prd = new ProductController();
                     </form>
                 </div>
                 <div id="cart" class="col-lg-3 col-md-3 col-sm-12">
-                    <a class="mt-4 mr-2" href="#">giỏ hàng</a><span class="mt-3">8</span>
+                    <a class="mt-4 mr-2" href="cart.php">giỏ hàng</a><span class="mt-3">
+                        <?php
+                        $check_cart = $cart->check_cart();
+                        if($check_cart){
+                            $qty=session::get('qty');
+                            echo $qty;
+                        }else{
+                            echo 0;
+                        }
+                        ?>
+                    </span>
                 </div>
             </div>
         </div>
@@ -68,12 +78,19 @@ $prd = new ProductController();
                     <nav>
                         <div id="menu" class="collapse navbar-collapse">
                             <ul>
-                                <li class="menu-item"><a href="#">iPhone</a></li>
-                                <li class="menu-item"><a href="#">Samsung</a></li>
-                                <li class="menu-item"><a href="#">HTC</a></li>
-                                <li class="menu-item"><a href="#">Nokia</a></li>
-                                <li class="menu-item"><a href="#">Sony</a></li>
-                                <li class="menu-item"><a href="#">Blackberry</a></li>
+                                <?php
+                                $show_cat = $cat->show_category();
+                                if ($show_cat) {
+                                    while ($data = $show_cat->fetch_array()) {
+                                        ?>
+                                <li class="menu-item"><a
+                                        href="category.php?cat_id=<?php echo $data['cat_id']; ?>"><?php echo $data['cat_name']; ?></a>
+                                </li>
+
+                                <?php
+                                    }
+                                }
+                                ?>
                             </ul>
                         </div>
                     </nav>

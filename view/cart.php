@@ -1,7 +1,31 @@
 <?php
-include_once('header.php');    
-?>
+include_once('header.php');  
 
+//Xóa Giỏ Hàng
+if(isset($_GET['cart_id'])){
+$cart_id=$_GET['cart_id'];
+$del_cart= $cart->del_cart($cart_id);
+} 
+
+//Cập Nhật Giỏ Hàng
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sbm'])) {
+    $cart_id = $_POST['cart_id'];
+    $quantity=$_POST['quantity'];
+    $update_cart = $cart->update_cart($quantity,$cart_id);
+}
+
+if(!isset($_GET['id'])){
+    echo "<meta http-equiv='refresh' content='0;URL=?id=live'>";
+}
+?>
+<?php
+if(isset($update_cart)){
+echo $update_cart;
+}
+if(isset($del_cart)){
+echo $del_cart;
+}
+?>
 <!--	Cart	-->
 <div id="my-cart">
     <div class="row">
@@ -10,66 +34,61 @@ include_once('header.php');
         <div class="cart-nav-item col-lg-3 col-md-3 col-sm-12">Giá</div>
     </div>
     <form method="post">
+        <?php
+    $get_product_cart = $cart->get_product_cart();
+    if ($get_product_cart) {
+        $total_cart=0;
+        $qty=0;
+        while ($data=$get_product_cart->fetch_array()) {
+            ?>
         <div class="cart-item row">
             <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                <img src="images/product-1.png">
-                <h4>iPhone Xs Max 2 Sim - 256GB Gold</h4>
+                <img src="../admin/img/product/<?php echo $data['prd_image']; ?>">
+                <h4><?php echo $data['prd_name']; ?></h4>
             </div>
 
             <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                <input type="number" id="quantity" class="form-control form-blue quantity" value="1" min="1">
+                <input type="hidden" id="quantity" name="cart_id" class="form-control form-blue quantity"
+                    value="<?php echo $data['cart_id']; ?>" min="1">
+                <input type="number" id="quantity" name="quantity" class="form-control form-blue quantity"
+                    value="<?php echo $data['quantity']; ?>" min="1">
             </div>
-            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>32.990.000đ</b><a href="#">Xóa</a></div>
-        </div>
-        <div class="cart-item row">
-            <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                <img src="images/product-2.png">
-                <h4>iPhone Xs Max 2 Sim - 256GB Gold</h4>
+            <div class="cart-price col-lg-3 col-md-3 col-sm-12">
+                <b><?php echo $total = $data['prd_price']*$data['quantity']; ?> đ</b><a
+                    onclick=" return confirm('want to del ?')" href="?cart_id=<?php echo $data['cart_id']; ?>">Xóa</a>
             </div>
-            <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                <input type="number" id="quantity" class="form-control form-blue quantity" value="1" min="1">
-            </div>
-            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>32.990.000đ</b><a href="#">Xóa</a></div>
-        </div>
-        <div class="cart-item row">
-            <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                <img src="images/product-3.png">
-                <h4>iPhone Xs Max 2 Sim - 256GB Gold</h4>
-            </div>
-            <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                <input type="number" id="quantity" class="form-control form-blue quantity" value="1" min="1">
-            </div>
-            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>32.990.000đ</b><a href="#">Xóa</a></div>
-        </div>
-        <div class="cart-item row">
-            <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                <img src="images/product-4.png">
-                <h4>iPhone Xs Max 2 Sim - 256GB Gold</h4>
-            </div>
-            <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                <input type="number" id="quantity" class="form-control form-blue quantity" value="1" min="1">
-            </div>
-            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>32.990.000đ</b><a href="#">Xóa</a></div>
-        </div>
-        <div class="cart-item row">
-            <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
-                <img src="images/product-5.png">
-                <h4>iPhone Xs Max 2 Sim - 256GB Gold</h4>
-            </div>
-            <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                <input type="number" id="quantity" class="form-control form-blue quantity" value="1" min="1">
-            </div>
-
-            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>32.990.000đ</b><a href="#">Xóa</a></div>
         </div>
 
+        <?php
+                $qty = $qty + $data['quantity'];
+                $total_cart += $total;
+                }
+            }
+            ?>
         <div class="row">
             <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
+                <?php
+                    //Kiểm Tra Giỏ Hàng
+                    
+                    $check_cart = $cart->check_cart();
+                        if($check_cart){
+                            ?>
                 <button id="update-cart" class="btn btn-success" type="submit" name="sbm">Cập nhật giỏ hàng</button>
             </div>
             <div class="cart-total col-lg-2 col-md-2 col-sm-12"><b>Tổng cộng:</b></div>
-            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>88.970.000đ</b></div>
+            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b>
+                    <?php
+                            echo $total_cart .'đ' ;
+                            session::set('qty',$qty);
+                            session::set('sum',$total_cart);
+                            
+                        }else{
+                            echo '	<div class="alert alert-danger">Empty Cart</div>';
+                        }
+                        ?>
+                </b></div>
         </div>
+
     </form>
 
 </div>

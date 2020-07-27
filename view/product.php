@@ -7,6 +7,7 @@ if($get_prd_detail){
     $data=$get_prd_detail->fetch_array();
 }
 
+//Thêm Giỏ Hàng
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sbm'])) {
     $quantity=$_POST['quantity'];
     $addcart= $cart->add_cart($quantity,$id);
@@ -42,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sbm'])) {
                 <form method="post">
                     <input type="number" class="buyefield" name="quantity" value="1" min="1" />
                     <input type="submit" class="butsubmit" name="sbm" value="MUA NGAY" />
+
                 </form>
             </div>
         </div>
