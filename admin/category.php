@@ -58,8 +58,8 @@ $del_cat= $cat->del_category($id);
                                     while ($data= $show_cat->fetch_array()) {
                             ?>
                             <tr>
-                                <td style=""><?php echo $data['cat_id']; ?></td>
-                                <td style=""><?php echo $data['cat_name']; ?></td>
+                                <td><?php echo $data['cat_id']; ?></td>
+                                <td><?php echo $data['cat_name']; ?></td>
                                 <td class="form-group">
                                     <a href="edit_category.php?cat_id=<?php echo $data['cat_id']; ?>"
                                         class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>

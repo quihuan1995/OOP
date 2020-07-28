@@ -74,5 +74,40 @@ class CartController
         $data= $this->db->select($query);
         return $data;
     }
+
+    public function del_all_cart(){
+        $cart_session = session_id();
+        $query = "delete from cart where cart_session='$cart_session'";
+        $data= $this->db->delete($query);
+        return $data;
+    }
+
+    public function add_order($customer_id){
+        $cart_session=session_id();
+        $query="select * from cart where cart_session='$cart_session'";
+        $data_cart = $this->db->select($query);
+        if($data_cart){
+            while($data = $data_cart->fetch_array()){
+                $prd_id=$data['prd_id'];
+                $prd_name=$data['prd_name'];
+                $quantity=$data['quantity'];
+                $prd_price=$data['prd_price']* $quantity;
+                $prd_image=$data['prd_image'];
+                $customer_id = $customer_id;
+
+            $query_order = "INSERT INTO orders(prd_id,prd_name,quantity,prd_price,prd_image,customer_id) VALUES('$prd_id','$prd_name','$quantity','$prd_price','$prd_image','$customer_id')";
+            $data_order=$this->db->insert($query_order);
+            
+            }
+        }
+    }
+
+  
+
+    public function show_order(){
+        $query = "select * from orders ";
+        $data= $this->db->select($query);
+        return $data;
+    }
 }
 ?>

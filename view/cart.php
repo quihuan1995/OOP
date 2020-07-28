@@ -1,6 +1,14 @@
 <?php
 include_once('header.php');  
 
+//Add Order - Del Order - Complete
+if(isset($_GET['order_id']) && $_GET['order_id'] == 'order'){
+    $customer_id = Session::get('customer_id');
+    $addorder=$cart->add_order($customer_id);
+    $delcart=$cart->del_all_cart();
+    header('location:success.php');
+}
+
 //Xóa Giỏ Hàng
 if(isset($_GET['cart_id'])){
 $cart_id=$_GET['cart_id'];
@@ -17,17 +25,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sbm'])) {
 if(!isset($_GET['id'])){
     echo "<meta http-equiv='refresh' content='0;URL=?id=live'>";
 }
-?>
-<?php
-if(isset($update_cart)){
-echo $update_cart;
+
+//check login
+$login_check = session::get('customer_login');
+    if($login_check==false){
+        header('location:register.php');
 }
-if(isset($del_cart)){
-echo $del_cart;
-}
+
+
 ?>
+
 <!--	Cart	-->
 <div id="my-cart">
+    <?php
+    if(isset($update_cart)){
+    echo $update_cart;
+    }
+    if(isset($del_cart)){
+    echo $del_cart;
+    }
+    ?>
     <div class="row">
         <div class="cart-nav-item col-lg-7 col-md-7 col-sm-12">Thông tin sản phẩm</div>
         <div class="cart-nav-item col-lg-2 col-md-2 col-sm-12">Tùy chọn</div>
@@ -96,28 +113,44 @@ echo $del_cart;
 
 <!--	Customer Info	-->
 <div id="customer">
-    <form method="post">
-        <div class="row">
-
-            <div id="customer-name" class="col-lg-4 col-md-4 col-sm-12">
-                <input placeholder="Họ và tên (bắt buộc)" type="text" name="name" class="form-control" required>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table data-toolbar="#toolbar" data-toggle="table">
+                    <?php
+                        $id=session::get('customer_id');
+                        $show_customer = $customer->show_customer($id);
+                        if ($show_customer) {
+                            $data = $show_customer->fetch_array();
+                        }
+                        ?>
+                    <tr>
+                        <td>Name</td>
+                        <td>:</td>
+                        <td style=""><?php echo $data['name']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>:</td>
+                        <td style=""><?php echo $data['phone']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>:</td>
+                        <td style=""><?php echo $data['address']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>:</td>
+                        <td style=""><?php echo $data['email']; ?></td>
+                    </tr>
+                </table>
             </div>
-            <div id="customer-phone" class="col-lg-4 col-md-4 col-sm-12">
-                <input placeholder="Số điện thoại (bắt buộc)" type="text" name="phone" class="form-control" required>
-            </div>
-            <div id="customer-mail" class="col-lg-4 col-md-4 col-sm-12">
-                <input placeholder="Email (bắt buộc)" type="text" name="mail" class="form-control" required>
-            </div>
-            <div id="customer-add" class="col-lg-12 col-md-12 col-sm-12">
-                <input placeholder="Địa chỉ nhà riêng hoặc cơ quan (bắt buộc)" type="text" name="add"
-                    class="form-control" required>
-            </div>
-
         </div>
-    </form>
+    </div>
     <div class="row">
         <div class="by-now col-lg-6 col-md-6 col-sm-12">
-            <a href="#">
+            <a href="?order_id=order">
                 <b>Mua ngay</b>
                 <span>Giao hàng tận nơi siêu tốc</span>
             </a>
@@ -129,6 +162,8 @@ echo $del_cart;
             </a>
         </div>
     </div>
+
+
 </div>
 <!--	End Customer Info	-->
 

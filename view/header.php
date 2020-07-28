@@ -13,6 +13,7 @@ $fm = new Format();
 $cart = new CartController();
 $cat = new CategoryController();
 $prd = new ProductController();
+$customer = new CustomerController();
 
 ?>
 
@@ -60,6 +61,25 @@ $prd = new ProductController();
                         }
                         ?>
                     </span>
+                </div>
+                <div id="cuslog" class="col-lg-3 col-md-3 col-sm-12">
+                    <?php
+                    //Logout
+                    if(isset($_GET['customer_id'])){
+                        $delcart = $cart->del_all_cart();
+                        session::destroy();
+                        header('location:register.php');
+                    }
+
+                    //CHeck Login
+                    $login_check = session::get('customer_login');
+                    if($login_check==false){
+                        echo '<a class="mt-4 mr-2" href="register.php">Login</a>';
+                    }else{
+                        echo '<a class="mt-4 mr-2" href="?customer_id='.Session::get('customer_id').' ">Logout</a>';
+                    }
+                    ?>
+
                 </div>
             </div>
         </div>

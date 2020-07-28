@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th7 27, 2020 lúc 08:34 AM
+-- Thời gian đã tạo: Th7 28, 2020 lúc 04:25 PM
 -- Phiên bản máy phục vụ: 10.4.11-MariaDB
 -- Phiên bản PHP: 7.2.30
 
@@ -42,7 +42,9 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `prd_id`, `cart_session`, `prd_name`, `prd_price`, `quantity`, `prd_image`) VALUES
-(19, 7, 'd6qgoqcu1mpk5mek8rah8fcuvo', 'Samsung S8 Plus', '13000000', 5, 'samsungS8plus.jpg');
+(35, 3, 'hngth3v5um8v4v1sienjhvjdf9', 'Iphone 8 Plus', '55000000', 3, 'iphone8plus.jpg'),
+(36, 1, 'hngth3v5um8v4v1sienjhvjdf9', 'iPhone Gold', '25000000', 5, 'iphonegold.jpg'),
+(41, 4, 'c506v1741j3r12nl4vpm6hsa28', 'Iphone X', '90000000', 1, 'iPhoneX64.png');
 
 -- --------------------------------------------------------
 
@@ -91,6 +93,57 @@ CREATE TABLE `comment` (
 INSERT INTO `comment` (`comm_id`, `prd_id`, `comm_name`, `comm_mail`, `comm_date`, `comm_details`) VALUES
 (51, 3, 'asd', 'sad@gmail.com', '2020-06-02 06:18:29', 'asdvsadfsad'),
 (52, 16, 'vancsd', 'sfffad@gmail.com', '2020-06-02 06:19:02', 'dsafdsafasd');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `customer`
+--
+
+CREATE TABLE `customer` (
+  `customer_id` int(11) NOT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `customer`
+--
+
+INSERT INTO `customer` (`customer_id`, `name`, `phone`, `email`, `address`, `password`) VALUES
+(2, 'D2', '12312312', 'admin@gmail.com', '20', '123456'),
+(3, 'D2', '12312312', 'vanco@gmail.com', '20', 'e10adc3949ba59abbe56e057f20f883e'),
+(4, 'C5', '12312312', 'sd@gmail.com', '20', 'e10adc3949ba59abbe56e057f20f883e');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `prd_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `prd_name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `prd_price` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `prd_image` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 0,
+  `date_order` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `prd_id`, `customer_id`, `prd_name`, `quantity`, `prd_price`, `prd_image`, `status`, `date_order`) VALUES
+(1, 4, 3, 'Iphone X', 1, '90000000', 'iPhoneX64.png', 0, '2020-07-28 13:43:59'),
+(2, 5, 4, 'IPhone XR', 2, '200000000', 'iphoneXR.jpg', 0, '2020-07-28 13:43:59'),
+(3, 28, 4, 'BlackBerry Key One', 1, '12000000', 'blackberryKey1.jpg', 0, '2020-07-28 13:43:59');
 
 -- --------------------------------------------------------
 
@@ -212,6 +265,18 @@ ALTER TABLE `comment`
   ADD PRIMARY KEY (`comm_id`);
 
 --
+-- Chỉ mục cho bảng `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`customer_id`);
+
+--
+-- Chỉ mục cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`);
+
+--
 -- Chỉ mục cho bảng `product`
 --
 ALTER TABLE `product`
@@ -232,7 +297,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT cho bảng `category`
@@ -245,6 +310,18 @@ ALTER TABLE `category`
 --
 ALTER TABLE `comment`
   MODIFY `comm_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+
+--
+-- AUTO_INCREMENT cho bảng `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `product`
